@@ -3,29 +3,36 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\PlataformesAfiliat; // Importa el model
+use App\Models\PlataformesAfiliat;
 
 class PlataformesAfiliatSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+   public function run(): void
     {
+        PlataformesAfiliat::truncate(); 
+
         PlataformesAfiliat::create([
             'empresa' => 'Booking.com',
             'url_base' => 'booking.com',
-            'valor_afiliat' => 'EL_TEU_ID_DE_BOOKING', // El teu ID d'afiliat
-            'id_afiliat' => 'aid' // El nom del paràmetre que utilitza Booking
+            'platform_affiliate_id' => 'EL_TEU_ID_DE_BOOKING',
+            // CORRECTE: Sense '?' al principi
+            'url_template' => 'aid={PLATFORM_ID}&label={CREATOR_ID}'
         ]);
 
         PlataformesAfiliat::create([
-            'empresa' => 'Kayak',
-            'url_base' => 'kayak.com',
-            'valor_afiliat' => 'EL_TEU_ID_DE_KAYAK',
-            'id_afiliat' => 'mcid'
+            'empresa' => 'Revolut',
+            'url_base' => 'revolut.com/referral',
+            'platform_affiliate_id' => 'roco5rg9n!NOV1-25-AR-H1',
+            // CORRECTE: Sense '/?' al principi
+            'url_template' => 'referral-code={PLATFORM_ID}&geo-redirect&subid={CREATOR_ID}'
         ]);
-
-        // Afegeix aquí altres plataformes (HeyMondo, GetYourGuide, etc.)
+        
+        PlataformesAfiliat::create([
+            'empresa' => 'Trip.com',
+            'url_base' => 'trip.com/sale',
+            'platform_affiliate_id' => 'JHM3K7',
+            // CORRECTE: Sense '?' al principi
+            'url_template' => 'locale=es-ES&referCode={PLATFORM_ID}&subid={CREATOR_ID}'
+        ]);
     }
 }
