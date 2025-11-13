@@ -137,5 +137,141 @@ private function processarEnllaçosAfiliats($html, $creatorId)
         return $dom->saveHTML();
     }
 
-    // De moment deixem les altres funcions (show, update, destroy) buides
+    /**
+     * Update the specified resource in storage.
+     * (Actualitza un viatge existent - per als Venedors)
+     */
+    public function update(Request $request, Viatge $viatge)
+    {
+        // 1. Obtenim l'usuari autenticat
+        $usuari = Auth::user();
+
+        // 2. Validació de seguretat: L'usuari NOMÉS pot editar els SEUS propis viatges
+        if ($usuari->id !== $viatge->usuari_id) {
+            return response()->json(['message' => 'Accés no autoritzat'], 403);
+        }
+        
+        // 3. Validació de les dades (similar a store, però 'titol' no és obligatori)
+        $validator = Validator::make($request->all(), [
+            'titol' => 'string|max:255',
+            'blog' => 'string',
+            'tipus_viatge' => 'in:Paquet Tancat,Afiliats',
+            'preu' => 'nullable|numeric|min:0',
+            'imatge_principal' => 'nullable|string',
+            'publicat' => 'boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        // 4. Lògica d'Afiliats (Processem l'HTML si existeix al request)
+        if ($request->has('blog')) {
+            $processedBlog = $request->blog; // Valor per defecte
+            if ($request->input('tipus_viatge', $viatge->tipus_viatge) == 'Afiliats') {
+                $processedBlog = $this->processarEnllaçosAfiliats($request->blog, $usuari->id);
+            }
+            // Actualitzem el camp 'blog'
+            $viatge->blog = $processedBlog;
+        }
+
+        // 5. Actualitzem la resta de camps
+        // utilitzem 'update' passant només els camps que no són 'blog'
+        $viatge->update($request->except('blog'));
+
+
+        return response()->json([
+            'message' => 'Viatge actualitzat correctament',
+            'data' => $viatge
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * (Esborra un viatge - per als Venedors)
+     */
+    public function destroy(Viatge $viatge)
+    {
+        // 1. Obtenim l'usuari autenticat
+        $usuari = Auth::user();
+
+        // 2. Validació de seguretat: L'usuari NOMÉS pot esborrar els SEUS propis viatges
+        if ($usuari->id !== $viatge->usuari_id) {
+            return response()->json(['message' => 'Accés no autoritzat'], 403);
+        }
+
+        // 3. Esborrem el viatge
+        // Les fotos i els items del carret s'esborraran automàticament
+        // gràcies al 'onDelete('cascade')' que vam posar a les migracions.
+        $viatge->delete();
+
+        return response()->json(['message' => 'Viatge esborrat correctament'], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     * (Mostra un viatge específic)
+     */
+    public function show(Viatge $viatge)
+    {
+        // Gràcies al Route Model Binding, Laravel ja ha trobat el viatge per l'ID.
+        // Simplement el retornem.
+        return response()->json($viatge, 200);
+    }
+
+    /**
+     * Puja la imatge principal (Portada) d'un viatge.
+     */
+    public function uploadImatgePrincipal(Request $request, Viatge $viatge)
+    {
+        // 1. Validació de seguretat (Només el propietari pot pujar)
+        if (Auth::id() !== $viatge->usuari_id) {
+            return response()->json(['message' => 'Accés no autoritzat'], 403);
+        }
+
+        // 2. Validació del fitxer
+        $request->validate([
+            'imatge_principal' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', // 2MB Max
+        ]);
+
+        // 3. Desa el fitxer
+        $path = $request->file('imatge_principal')->store('viatges/portades', 'public');
+
+        // 4. Actualitza la BD (taula 'viatge') amb la ruta
+        $viatge->imatge_principal = $path;
+        $viatge->save();
+
+        return response()->json([
+            'message' => 'Imatge principal pujada correctament',
+            'path' => $path
+        ], 200);
+    }
+
+    /**
+     * Puja una foto addicional a la galeria (taula 'viatge_fotos').
+     */
+    public function uploadFotoGaleria(Request $request, Viatge $viatge)
+    {
+        // 1. Validació de seguretat
+        if (Auth::id() !== $viatge->usuari_id) {
+            return response()->json(['message' => 'Accés no autoritzat'], 403);
+        }
+
+        // 2. Validació
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'alt_text' => 'nullable|string'
+        ]);
+
+        // 3. Desa el fitxer
+        $path = $request->file('foto')->store('viatges/galeria', 'public');
+
+        // 4. Crea el registre a la taula 'viatge_fotos'
+        $viatge->fotos()->create([
+            'imatge_url' => $path,
+            'alt_text' => $request->alt_text ?? 'Imatge de galeria'
+        ]);
+
+        return response()->json(['message' => 'Foto afegida a la galeria', 'path' => $path], 201);
+    }
 }
