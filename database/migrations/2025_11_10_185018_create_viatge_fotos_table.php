@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('viatge_fotos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('viatge_id'); // FK
-            $table->string('imatge_url'); // Ruta a la imatge
-            $table->string('alt_text')->nullable(); // Text alternatiu per WCAG
+            $table->string('imatge_url'); 
+            $table->string('alt_text')->nullable();
             $table->timestamps();
-
-            // Clau Forana (FK)
             $table->foreign('viatge_id')->references('id')->on('viatge')->onDelete('cascade');
         });
     }

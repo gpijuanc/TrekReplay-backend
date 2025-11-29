@@ -17,10 +17,8 @@ return new class extends Migration
             $table->string('nom');
             $table->string('correu')->unique();
             $table->string('contrasenya');
-            $table->boolean('OTA')->default(false); // El teu camp "OTA (Boolean)"
+            $table->boolean('OTA')->default(false);
             $table->timestamps();
-
-            // Definim la Clau Forana (FK)
             $table->foreign('role_id')->references('id')->on('rols');
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rols', function (Blueprint $table) {
             $table->id();
-            $table->string('tipus'); // Ex: Admin, Venedor, Comprador
+            $table->string('tipus'); // Admin, Venedor, Comprador
             $table->timestamps();
         });
     }

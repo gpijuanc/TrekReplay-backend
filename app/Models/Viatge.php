@@ -18,28 +18,26 @@ class Viatge extends Model
         'blog',
         'tipus_viatge',
         'preu',
-        'publicat',
+        'pais',
+        'publicat'
     ];
 
-    /**
-     * Un Viatge pertany a un Usuari (Venedor).
-     */
+    protected $casts = [
+        'pais' => 'array',
+        'publicat' => 'boolean',
+        'preu' => 'decimal:2'
+    ];
+
     public function venedor()
     {
         return $this->belongsTo(Usuari::class, 'usuari_id');
     }
 
-    /**
-     * Un Viatge pot tenir moltes ViatgeFotos.
-     */
     public function fotos()
     {
         return $this->hasMany(ViatgeFoto::class);
     }
 
-    /**
-     * Un Viatge pot estar en molts CarretsVirtuals.
-     */
     public function carretItems()
     {
         return $this->hasMany(CarretVirtual::class);

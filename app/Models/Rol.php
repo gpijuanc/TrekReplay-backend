@@ -9,16 +9,8 @@ class Rol extends Model
 {
     use HasFactory;
 
-    /**
-     * El nom de la taula associada amb el model.
-     *
-     * @var string
-     */
-    protected $table = 'rols'; // Important per connectar amb la taula 'rols'
+    protected $table = 'rols';
 
-    /**
-     * Un Rol pertany a molts Usuaris.
-     */
     public function usuaris()
     {
         return $this->hasMany(Usuari::class);

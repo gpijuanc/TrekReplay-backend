@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('carret_virtual', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('usuari_id'); // FK a usuaris
-            $table->unsignedBigInteger('viatge_id'); // FK a viatge (Paquet Tancat)
-            $table->timestamp('temps_afegit')->useCurrent(); // El teu camp added_at
+            $table->unsignedBigInteger('viatge_id'); // FK a viatge
+            $table->timestamp('temps_afegit')->useCurrent(); //Farà falta?
             $table->timestamps();
-
-            // Claus Foranes (FK)
             $table->foreign('usuari_id')->references('id')->on('usuaris')->onDelete('cascade');
             $table->foreign('viatge_id')->references('id')->on('viatge')->onDelete('cascade');
         });

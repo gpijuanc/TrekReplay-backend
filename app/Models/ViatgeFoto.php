@@ -17,9 +17,6 @@ class ViatgeFoto extends Model
         'alt_text',
     ];
 
-    /**
-     * Una Foto pertany a un Viatge.
-     */
     public function viatge()
     {
         return $this->belongsTo(Viatge::class);

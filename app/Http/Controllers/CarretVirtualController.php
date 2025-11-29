@@ -7,7 +7,7 @@ use App\Models\CarretVirtual;
 use App\Models\Viatge;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Routing\Controller; // Assegura't que aquest 'use' hi és
+use Illuminate\Routing\Controller;
 
 class CarretVirtualController extends Controller
 {
@@ -18,7 +18,7 @@ class CarretVirtualController extends Controller
     {
         $usuariId = Auth::id();
         $items = CarretVirtual::where('usuari_id', $usuariId)
-                              ->with('viatge') // Carreguem la info del viatge
+                              ->with('viatge')  //Eager Loading? funciona no tocar
                               ->get();
 
         return response()->json($items, 200);
@@ -31,12 +31,10 @@ class CarretVirtualController extends Controller
     {
         $usuari = Auth::user();
 
-        // 1. Validació de seguretat: Només els Compradors (role_id 3) poden afegir
         if ($usuari->role_id != 3) {
             return response()->json(['message' => 'Només els compradors poden afegir items al carret.'], 403);
         }
 
-        // 2. Validació de dades
         $validator = Validator::make($request->all(), [
             'viatge_id' => 'required|integer|exists:viatge,id'
         ]);
@@ -45,13 +43,11 @@ class CarretVirtualController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        // 3. Comprovem que el viatge sigui un "Paquet Tancat"
         $viatge = Viatge::find($request->viatge_id);
         if ($viatge->tipus_viatge !== 'Paquet Tancat') {
             return response()->json(['message' => 'Només es poden afegir Paquets Tancats al carret.'], 400);
         }
         
-        // 4. (Opcional) Comprovem si ja existeix per no duplicar-lo
         $existent = CarretVirtual::where('usuari_id', $usuari->id)
                                  ->where('viatge_id', $viatge->id)
                                  ->first();
@@ -60,11 +56,10 @@ class CarretVirtualController extends Controller
             return response()->json(['message' => 'Aquest item ja és al teu carret.'], 409); // 409 Conflict
         }
 
-        // 5. Creem l'ítem al carret
         $item = CarretVirtual::create([
             'usuari_id' => $usuari->id,
             'viatge_id' => $viatge->id,
-            'temps_afegit' => now() // Utilitzem el camp 'temps_afegit'
+            'temps_afegit' => now() 
         ]);
 
         return response()->json([
@@ -74,14 +69,12 @@ class CarretVirtualController extends Controller
     }
 
     /**
-     * Esborra un ítem del carret.
-     * Nota: Passem el 'viatge_id' (no l'ID del carret) per simplicitat.
+     * Esborra un viatge del carret.
      */
     public function destroy($viatge_id)
     {
         $usuariId = Auth::id();
 
-        // Busquem l'ítem del carret que pertany a aquest usuari I a aquest viatge
         $item = CarretVirtual::where('usuari_id', $usuariId)
                              ->where('viatge_id', $viatge_id)
                              ->first();
@@ -90,7 +83,6 @@ class CarretVirtualController extends Controller
             return response()->json(['message' => 'Item no trobat al carret.'], 404);
         }
 
-        // Esborrem l'ítem
         $item->delete();
 
         return response()->json(['message' => 'Item esborrat del carret.'], 200);

@@ -17,17 +17,11 @@ class CarretVirtual extends Model
         'temps_afegit',
     ];
 
-    /**
-     * Un ítem del carret pertany a un Usuari.
-     */
     public function usuari()
     {
         return $this->belongsTo(Usuari::class);
     }
 
-    /**
-     * Un ítem del carret pertany a un Viatge (Paquet Tancat).
-     */
     public function viatge()
     {
         return $this->belongsTo(Viatge::class);

@@ -17,6 +17,4 @@ class PlataformesAfiliat extends Model
         'valor_afiliat',
         'id_afiliat',
     ];
-
-    // Aquest model no necessita relacions, ja que és una taula de consulta.
 }

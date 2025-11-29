@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('plataformes_afiliats', function (Blueprint $table) {
             $table->id();
-            $table->string('empresa')->unique(); // Ex: "Booking.com"
-            $table->string('url_base'); // Ex: "booking.com"
-            $table->string('valor_afiliat'); // El teu ID per a aquesta plataforma
-            $table->string('id_afiliat'); // El nom del paràmetre (Ex: "aid")
+            $table->string('empresa')->unique();
+            $table->string('url_base');
+            $table->string('url_template');
+            $table->string('platform_affiliate_id')->nullable();            
             $table->timestamps();
         });
     }

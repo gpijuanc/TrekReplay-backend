@@ -12,13 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Cridem els seeders de dades bàsiques
         $this->call([
             RolSeeder::class,
             PlataformesAfiliatSeeder::class,
         ]);
-
-        // 2. (Opcional) Creem usuaris de prova
-        // \App\Models\Usuari::factory(10)->create();
     }
 }

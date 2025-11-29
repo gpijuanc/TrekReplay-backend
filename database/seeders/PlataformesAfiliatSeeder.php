@@ -15,7 +15,6 @@ class PlataformesAfiliatSeeder extends Seeder
             'empresa' => 'Booking.com',
             'url_base' => 'booking.com',
             'platform_affiliate_id' => 'EL_TEU_ID_DE_BOOKING',
-            // CORRECTE: Sense '?' al principi
             'url_template' => 'aid={PLATFORM_ID}&label={CREATOR_ID}'
         ]);
 
@@ -23,7 +22,6 @@ class PlataformesAfiliatSeeder extends Seeder
             'empresa' => 'Revolut',
             'url_base' => 'revolut.com/referral',
             'platform_affiliate_id' => 'roco5rg9n!NOV1-25-AR-H1',
-            // CORRECTE: Sense '/?' al principi
             'url_template' => 'referral-code={PLATFORM_ID}&geo-redirect&subid={CREATOR_ID}'
         ]);
         
@@ -31,7 +29,6 @@ class PlataformesAfiliatSeeder extends Seeder
             'empresa' => 'Trip.com',
             'url_base' => 'trip.com/sale',
             'platform_affiliate_id' => 'JHM3K7',
-            // CORRECTE: Sense '?' al principi
             'url_template' => 'locale=es-ES&referCode={PLATFORM_ID}&subid={CREATOR_ID}'
         ]);
     }

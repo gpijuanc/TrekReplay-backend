@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('viatge', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('usuari_id'); // FK al Venedor
+            $table->unsignedBigInteger('usuari_id'); // FK Venedor
             $table->string('titol');
+            $table->json('pais')->nullable();
             $table->string('imatge_principal')->nullable(); // Ruta a la imatge
-            $table->longText('blog'); // Per a l'HTML de l'editor WYSIWYG
+            $table->longText('blog'); 
             $table->enum('tipus_viatge', ['Paquet Tancat', 'Afiliats']);
             $table->decimal('preu', 8, 2)->nullable(); // Només per Paquets Tancats (recorda valor màxim 999999.99 no et flipes fent test)
             $table->boolean('publicat')->default(false);
             $table->timestamps();
-
-            // Definim la Clau Forana (FK)
             $table->foreign('usuari_id')->references('id')->on('usuaris');
         });
     }
