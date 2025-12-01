@@ -37,3 +37,5 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 # 9. Exposem el port 80 (estàndard web)
 EXPOSE 80
+# 10. Executem migracions i arrenquem Apache
+CMD sh -c "php artisan migrate:fresh --seed --force && apache2-foreground"
