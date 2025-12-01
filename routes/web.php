@@ -20,3 +20,13 @@ Route::get('/setup-database-force', function () {
         return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
     }
 });
+
+Route::get('/clear-cache', function () {
+    try {
+        // Neteja tota la memòria cau (Configuració, Rutes, Vistes)
+        Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return "<h1>Memòria cau netejada correctament! ✅</h1>";
+    } catch (\Exception $e) {
+        return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
+    }
+});
