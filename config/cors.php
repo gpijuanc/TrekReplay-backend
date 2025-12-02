@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://692de5fa73dabd5c80afbf58--trekreplay-app.netlify.app','http://localhost:4200'],
+    'allowed_origins' => ['*'],
         
     'allowed_origins_patterns' => [],
 
