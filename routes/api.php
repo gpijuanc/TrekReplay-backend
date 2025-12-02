@@ -22,3 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/carret/{viatge_id}', [CarretVirtualController::class, 'destroy']); 
     Route::get('/my-viatges', [ViatgeController::class, 'myViatges']); 
 });
+
+Route::get('/debug-headers', function () {
+    return response()->json(request()->headers->all());
+});
