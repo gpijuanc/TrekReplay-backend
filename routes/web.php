@@ -21,7 +21,7 @@ Route::get('/setup-database-force', function () {
     }
 });
 
-RRoute::get('/clear-cache', function () {
+Route::get('/clear-cache', function () {
     try {
         // Esborra la cache de configuració
         Illuminate\Support\Facades\Artisan::call('config:clear');
