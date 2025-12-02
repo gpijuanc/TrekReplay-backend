@@ -21,11 +21,16 @@ Route::get('/setup-database-force', function () {
     }
 });
 
-Route::get('/clear-cache', function () {
+RRoute::get('/clear-cache', function () {
     try {
-        // Neteja tota la memòria cau (Configuració, Rutes, Vistes)
-        Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        return "<h1>Memòria cau netejada correctament! ✅</h1>";
+        // Esborra la cache de configuració
+        Illuminate\Support\Facades\Artisan::call('config:clear');
+        // Esborra la cache de rutes
+        Illuminate\Support\Facades\Artisan::call('route:clear');
+        // Esborra altres caches
+        Illuminate\Support\Facades\Artisan::call('cache:clear');
+        
+        return "<h1>✅ Cache netejada! Laravel ara llegirà el nou cors.php</h1>";
     } catch (\Exception $e) {
         return "<h1>Error</h1><pre>" . $e->getMessage() . "</pre>";
     }
