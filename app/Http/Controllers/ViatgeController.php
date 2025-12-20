@@ -204,11 +204,19 @@ class ViatgeController extends Controller
         ]);
 
         $path = $request->file('foto')->store('viatges/galeria', 'public');
+        $fullPath = '/storage/' . $path;
 
         $viatge->fotos()->create([
             'imatge_url' => $path,
             'alt_text' => $request->alt_text ?? 'Imatge de galeria'
         ]);
+
+        $totalFotos = $viatge->fotos()->count();
+
+        if ($totalFotos === 1 || empty($viatge->imatge_principal)) {
+            $viatge->imatge_principal = $fullPath;
+            $viatge->save();
+        }
 
         return response()->json(['message' => 'Foto afegida a la galeria', 'path' => $path], 201);
     }
