@@ -162,7 +162,7 @@ class ViatgeController extends Controller
      */
     public function show(Viatge $viatge)
     {
-        return response()->json($viatge, 200);
+        return response()->json($viatge->load(['venedor', 'fotos']), 200);
     }
 
     /**
